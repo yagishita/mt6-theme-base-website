@@ -9,12 +9,9 @@
 
 <mt:If name="top_page" ne="1">
 <mt:If name="site_name" ne="">
-<title><mt:Var name="page_title" /> | </mt:If><mt:Var name="site_name" /></title>
+  <title><mt:Var name="page_title" /> | </mt:If><mt:Var name="site_name" /></title>
 <mt:Else>
-<title><mt:Var name="page_title" /></title>
-</mt:If>
-<mt:Else>
-<title><mt:Var name="page_title" /></title>
+  <title><mt:Var name="page_title" /></title>
 </mt:If>
 
 <meta name="description" content="<mt:Var name='page_description'>">

@@ -1,0 +1,26 @@
+## <mt:Date format="%Y-%m-%d %H:%M:%S">
+
+## .html で SSI を有効に
+AddHandler server-parsed .html
+
+## 404 エラーが発生した場合、コーポレートサイトのホームに移動
+ErrorDocument 404 https://www.example.com/
+
+## URL リダイレクト（ページ単位）
+## URL リダイレクト（フォルダ単位）
+## URL リダイレクト（正規表現）
+
+## 常時 SSL
+RewriteEngine On
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+## 正規化 : www 付き
+RewriteEngine On
+RewriteCond %{HTTP_HOST} ^example\.com$ [NC]
+RewriteRule ^(.*)$ http://www.example.com/$1 [R=301,L]
+
+## 正規化 : index.html
+RewriteEngine On
+RewriteCond %{THE_REQUEST} ^(.*)index.html [NC]
+RewriteRule ^(.*)index.html$ https://www.example.com/$1 [R=301,L]

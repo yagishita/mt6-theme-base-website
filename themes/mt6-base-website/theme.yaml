@@ -2,7 +2,7 @@ label: Base Website (MT6)
 id: base_website
 author_name: Taketoshi Yagishita
 author_link: https://github.com/yagishita
-version: 0.10
+version: 0.11
 class: website
 l10n_lexicon:
   en: l10n_en.yaml
@@ -82,32 +82,37 @@ elements:
       templates:
           index:
             main_index:
-              label: index.html
+              label: '00 : index.html'
               outfile: index.html
               rebuild_me: 1
-            javascript:
-              label: common.js
-              outfile: common.js
-              build_type: 2
-              rebuild_me: 1
             styles:
-              label: common.css
+              label: '02 : common.css'
               outfile: common.css
               build_type: 2
               rebuild_me: 1
+            javascript:
+              label: '03 : common.js'
+              outfile: common.js
+              build_type: 2
+              rebuild_me: 1
             feed_recent:
-              label: feed.xml
+              label: '09 : feed.xml'
               outfile: feed.xml
               build_type: 2
               rebuild_me: 1
             robots:
-              label: robots.txt
+              label: '09 : robots.txt'
               outfile: robots.txt
               build_type: 2
               rebuild_me: 1
             sitemap:
-              label: sitemap.xml
+              label: '09 : sitemap.xml'
               outfile: sitemap.xml
+              build_type: 2
+              rebuild_me: 1
+            htaccess:
+              label: '09 : .htaccess'
+              outfile: .htaccess
               build_type: 2
               rebuild_me: 1
           individual:
