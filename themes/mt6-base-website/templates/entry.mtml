@@ -1,0 +1,58 @@
+<mt:Ignore>============================================================
+共通変数
+============================================================</mt:Ignore>
+<mt:Include module="var_common" strip_linefeed="1" />
+
+<mt:Ignore>============================================================
+ページ情報
+============================================================</mt:Ignore>
+<mt:SetVar name="page_title" value="" />
+<mt:SetVar name="page_description" value="" />
+<mt:SetVar name="page_image" value="" />
+
+<mt:SetVar name="top_page" value="1" />
+<mt:SetVar name="og_type" value="website" />
+<mt:SetVar name="no_index" value="1" />
+<mt:SetVar name="no_social" value="1" />
+
+<mt:Ignore>============================================================
+パンくずリスト
+============================================================</mt:Ignore>
+<mt:SetVarBlock name="list_title[0]">ホーム</mt:SetVarBlock>
+<mt:SetVarBlock name="list_title[1]"></mt:SetVarBlock>
+<mt:SetVarBlock name="list_title[2]"></mt:SetVarBlock>
+
+<mt:SetVarBlock name="list_url[0]"><mt:WebsiteURL /></mt:SetVarBlock>
+<mt:SetVarBlock name="list_url[1]"></mt:SetVarBlock>
+<mt:SetVarBlock name="list_url[2]"></mt:SetVarBlock>
+
+<mt:Ignore>============================================================
+変数 : main_content
+============================================================</mt:Ignore>
+<mt:SetVarTemplate name="main_content">
+<h1><mt:Var name="page_title"></h1>
+
+<mt:EntryBody />
+<mt:EntryMore />
+
+</mt:SetVarTemplate>
+
+<mt:Ignore>============================================================
+変数 : append_head
+============================================================</mt:Ignore>
+<mt:SetVarTemplate name="append_head"></mt:SetVarTemplate>
+
+<mt:Ignore>============================================================
+変数 : append_body
+============================================================</mt:Ignore>
+<mt:SetVarTemplate name="append_body"></mt:SetVarTemplate>
+
+<mt:Ignore>============================================================
+変数 : append_html
+============================================================</mt:Ignore>
+<mt:SetVarTemplate name="append_html"></mt:SetVarTemplate>
+
+<mt:Ignore>============================================================
+出力
+============================================================</mt:Ignore>
+<mt:Include module="tmpl_common" />

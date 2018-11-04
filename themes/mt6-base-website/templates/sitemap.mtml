@@ -1,0 +1,40 @@
+<mt:Ignore>============================================================
+共通変数
+============================================================</mt:Ignore>
+<mt:Include module="var_common" strip_linefeeds="1" />
+<mt:Include module="sitemap_index" />
+
+<mt:Ignore>============================================================
+出力
+============================================================</mt:Ignore>
+<mt:Unless name="beautify" compress="2">
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+<mt:Ignore>==== INDEX =====</mt:Ignore>
+<mt:Var name="store_to_items" />
+<mt:Loop name="_items">
+<url>
+  <loc><mt:Var name="__value__" /></loc>
+  <lastmod><mt:Date format_name="iso8601"></lastmod>
+</url>
+</mt:Loop>
+
+<mt:Ignore>==== PAGE =====</mt:Ignore>
+<mt:Pages blog_ids="" sort_by="modified_on" sort_order="descend">
+<url>
+  <loc><mt:PagePermalink regex_replace="/index.html/","" /></loc>
+  <lastmod><mt:PageModifiedDate format_name="iso8601"></lastmod>
+</url>
+</mt:Pages>
+
+<mt:Ignore>==== ENTRY =====</mt:Ignore>
+<mt:Entries blog_ids="" sort_by="modified_on" sort_order="descend">
+<url>
+  <loc><mt:EntryPermalink regex_replace="/index.html/","" /></loc>
+  <lastmod><mt:EntryModifiedDate format_name="iso8601"></lastmod>
+</url>
+</mt:Entries>
+
+</urlset>
+</mt:Unless>

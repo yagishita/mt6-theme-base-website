@@ -1,0 +1,149 @@
+label: Base Website (MT6)
+id: base_website
+author_name: Taketoshi Yagishita
+author_link: https://github.com/yagishita
+version: 0.10
+class: website
+l10n_lexicon:
+  en: l10n_en.yaml
+  ja: l10n_ja.yaml
+description: <__trans phrase='__DESCRIPTION'>
+protected: 1
+order: 110
+elements:
+  default_prefs:
+    component: core
+    importer:  default_prefs
+    data:
+      use_revision:           0
+      max_revisions_entry:    5
+      max_revisions_template: 10
+      convert_paras:          0
+      include_cache:          0
+      allow_comments_default: 0
+      allow_pings_default:    0
+      allow_reg_comments:     0
+#  default_categories:
+#    component: core
+#    importer: default_categories
+#    data:
+#      cat01:
+#        label: "カテゴリ01"
+#        children:
+#          sub01:
+#            label: "サブ01"
+#          sub02:
+#            label: "サブ02"
+#  default_folders:
+#    component: core
+#    importer: default_folders
+#    data:
+#      common:
+#        label: common
+#        children:
+#          css:
+#            label: css
+#          data:
+#            label: data
+#          inc:
+#            label: inc
+#          js:
+#            label: js
+  custom_fields:
+    component: commercial
+    importer: custom_fields
+    data:
+      entryimage:
+        name: アイキャッチ画像
+        description: 'アイキャッチ画像を指定してください。指定された画像は og:image にも適用されます。'
+        obj_type: entry
+        required: 0
+        default: ~
+        options: ~
+        tag: EntryImage
+        type: image
+      pageimage:
+        name: アイキャッチ画像
+        description: 'アイキャッチ画像を指定してください。指定された画像は og:image にも適用されます。'
+        obj_type: page
+        required: 0
+        default: ~
+        options: ~
+        tag: PageImage
+        type: image
+  template_set:
+    component: core
+    importer: template_set
+    name: template set
+    data:
+      label: Base Website
+      base_path: templates
+      require: 1
+      templates:
+          index:
+            main_index:
+              label: index.html
+              outfile: index.html
+              rebuild_me: 1
+            javascript:
+              label: common.js
+              outfile: common.js
+              build_type: 2
+              rebuild_me: 1
+            styles:
+              label: common.css
+              outfile: common.css
+              build_type: 2
+              rebuild_me: 1
+            feed_recent:
+              label: feed.xml
+              outfile: feed.xml
+              build_type: 2
+              rebuild_me: 1
+            robots:
+              label: robots.txt
+              outfile: robots.txt
+              build_type: 2
+              rebuild_me: 1
+            sitemap:
+              label: sitemap.xml
+              outfile: sitemap.xml
+              build_type: 2
+              rebuild_me: 1
+          individual:
+            entry:
+              label: Entry
+              mappings:
+                entry_archive:
+                  archive_type: Individual
+          page:
+            page:
+              label: Page
+              mappings:
+                page_archive:
+                  archive_type: Page
+          archive:
+            category_entry_listing:
+              label: Category Entry Listing
+              mappings:
+                category:
+                  archive_type: Category
+            monthly_entry_listing:
+              label: Monthly Entry Listing
+              mappings:
+                monthly:
+                  archive_type: Monthly
+          module:
+            mod_var_common:
+              label: var_common
+            mod_tmpl_common:
+              label: tmpl_common
+            mod_sitemap_index:
+              label: sitemap_index
+#          system:
+#            dynamic_error:
+#              description_label: Displays errors for dynamically-published templates.
+#              label: Dynamic Error
+#            popup_image:
+#              description_label: Displays image when user clicks a popup-linked image.
+#              label: Popup Image

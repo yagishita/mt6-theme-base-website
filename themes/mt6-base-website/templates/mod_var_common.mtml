@@ -1,0 +1,273 @@
+<mt:Ignore>============================================================
+名称 : var_common
+解説 : すべてのテンプレートで利用する共通モジュール（変数）
+============================================================</mt:Ignore>
+
+<mt:Ignore>============================================================
+解説 : regex_replace の条件パターン
+============================================================</mt:Ignore>
+<mt:SetVar name="regex_spce" value="/^\s+/gm" />
+<mt:SetVar name="regex_html" value="/<!--\s[\s\S]*?-->/gm" />
+<mt:SetVar name="regex_css" value="/\/\*/?(\n|[^/]|[^*]/)*\*\//gm" />
+<mt:SetVar name="regex_js" value="/\/\/.+\n/gm" />
+<mt:SetVar name="regex_lf" value="/\n/gm" />
+<mt:SetVar name="regex_host" value="/https?://.+?//" />
+
+<mt:Ignore>============================================================
+名称 : site_name
+解説 : サイト名
+============================================================</mt:Ignore>
+<mt:SetVar name="site_name" value="" />
+
+<mt:Ignore>============================================================
+名称 : retrieve_asseturl
+解説 : 変数 blog_id と tag で絞り込んだアセットの内、作成日が最新のものの URL を取得
+============================================================</mt:Ignore>
+<mt:SetVarTemplate name="retrieve_asseturl"><mt:Assets blog_ids="$blog_id" tag="$tag" sort_by="created_on" sort_order="descend" limit="1"><mt:AssetURL /></mt:Assets></mt:SetVarTemplate>
+
+<mt:Ignore>============================================================
+名称 : default_image
+解説 : OGP や  Twitter Card で指定する画像の初期値
+============================================================</mt:Ignore>
+<mt:SetVarTemplate name="default_image"><mt:Var name="retrieve_asseturl" blog_id="" tag="@OGP" /></mt:SetVarTemplate>
+
+<mt:Ignore>============================================================
+名称 : entryinfo
+解説 : 記事情報を取得
+============================================================</mt:Ignore>
+<mt:SetVarTemplate name="entryinfo">
+
+<mt:SetVar name="_title" value="" />
+<mt:If tag="EntryTitle"><mt:EntryTitle escape="html" setvar="_title" /></mt:If>
+
+<mt:SetVar name="_excerpt" value="" />
+<mt:If tag="EntryExcerpt"><mt:EntryExcerpt remove_html="1" strip_linefeeds="1" setvar="_excerpt" /></mt:If>
+
+<mt:SetVar name="_url" value="" />
+<mt:If tag="EntryPermalink"><mt:EntryPermalink regex_replace="/index.html/g","" setvar="_url" /></mt:If>
+
+<mt:SetVar name="_date" value="" />
+<mt:If tag="EntryDate"><mt:EntryDate format="%Y年%m月%d日" setvar="_date" /></mt:If>
+
+<mt:SetVar name="_bid" value="" />
+<mt:If tag="EntryBlogID"><mt:EntryBlogID setvar="_bid" /></mt:If>
+
+<mt:SetVar name="_eid" value="" />
+<mt:If tag="EntryID"><mt:EntryID setvar="_eid" /></mt:If>
+
+<mt:SetVar name="_status" value="" />
+<mt:If tag="EntryStatus"><mt:EntryStatus setvar="_status" /></mt:If>
+
+<mt:SetVar name="_img_eye" value="" />
+<mt:SetVar name="_img" value="" />
+<mt:If tag="EntryImage"><mt:EntryImageAsset><mt:AssetURL setvar="_img_eye"></mt:EntryImageAsset></mt:If>
+<mt:If name="_img_eye" ne=""><mt:SetVar name="_img" value="$_img_eye"><mt:Else><mt:SetVar name="_img" value="$default_image"></mt:If>
+
+</mt:SetVarTemplate>
+
+<mt:Ignore>============================================================
+名称 : pageinfo
+解説 : 記事情報を取得
+============================================================</mt:Ignore>
+<mt:SetVarTemplate name="pageinfo">
+
+<mt:SetVar name="_title" value="" />
+<mt:If tag="PageTitle"><mt:PageTitle escape="html" setvar="_title" /></mt:If>
+
+<mt:SetVar name="_excerpt" value="" />
+<mt:If tag="PageExcerpt"><mt:PageExcerpt remove_html="1" strip_linefeeds="1" setvar="_excerpt" /></mt:If>
+
+<mt:SetVar name="_url" value="" />
+<mt:If tag="PagePermalink"><mt:PagePermalink regex_replace="/index.html/g","" setvar="_url" /></mt:If>
+
+<mt:SetVar name="_date" value="" />
+<mt:If tag="PageDate"><mt:PageDate format="%Y年%m月%d日" setvar="_date" /></mt:If>
+
+<mt:SetVar name="_eid" value="" />
+<mt:If tag="PageID"><mt:PageID setvar="_eid" /></mt:If>
+
+<mt:SetVar name="_img_eye" value="">
+<mt:SetVar name="_img" value="">
+<mt:If tag="PageImage"><mt:PageImageAsset><mt:AssetURL setvar="_img_eye" /></mt:PageImageAsset></mt:If>
+<mt:If name="_img_ogp" ne=""><mt:SetVar name="_img" value="$_img_ogp" /><mt:Else><mt:SetVar name="_img" value="$default_image" /></mt:If>
+
+</mt:SetVarTemplate>
+
+<mt:Ignore>============================================================
+名称 : retrieve_by_url
+解説 : 変数 url で指定した記事の情報を取得
+============================================================</mt:Ignore>
+<mt:SetVarTemplate name="retrieve_by_url">
+
+<mt:SetVar name="_bid" value="" />
+<mt:SetVar name="_eid" value="" />
+<mt:SetVar name="_bname" value="" />
+
+<mt:RetrieveBlogID url="$url" setvar="_bid" />
+<mt:RetrieveEntryID url="$url" setvar="_eid" />
+
+<mt:If name="_bid" ge="1">
+<mt:Entries blog_ids="$_bid" id="$_eid"><mt:Var name="entryinfo" /></mt:Entries>
+<mt:Blogs blog_ids="$_bid"><mtBlogName escape="html" setvar="_bname" /></mt:Blogs>
+</mt:If>
+
+</mt:SetVarTemplate>
+
+<mt:Ignore>============================================================
+名称 : store_to_items
+解説 : 変数 data の内容をカンマ区切りで分割し、変数 _items に格納
+============================================================</mt:Ignore>
+<mt:SetVarTemplate name="store_to_items">
+
+<mt:SetVar name="_items" />
+
+<mt:Var name="data" regex_replace="/\n/g"," " setvar="_data" />
+<mt:Var name="_data" regex_replace="/[^,]/g","" cat="," count_characters="1" setvar="_length" />
+
+<mt:For var="i" from="1" to="$_length">
+<mt:Var name="_data" regex_replace="/^([^,]+).*/","$1" trim="1" setvar="_val" />
+<mt:Var name="_data" regex_replace="/^([^,]+,?)(.*)/","$2" setvar="_data" />
+
+<mt:If name="_val" ne=""><mt:Var name="_items" function="push" value="$_val" /></mt:If>
+</mt:For>
+
+</mt:SetVarTemplate>
+
+<mt:Ignore>============================================================
+名称 : breadcrumb
+解説 : パンくずリスト
+変数 list_tilte[] と list＿url[] で指定された内容をループ出力
+============================================================</mt:Ignore>
+<mt:SetVarTemplate name="breadcrumb">
+<div class="breadcrumb">
+<div class="container">
+<mt:SetVar name="i" value="0">
+
+<ul itemscope itemtype="http://schema.org/BreadcrumbList">
+<mt:Loop name="list_title">
+<mt:SetVarBlock name="_url"><mt:Var name="list_url[$i]"></mt:SetVarBlock>
+<mt:If name="__value__" ne="">
+<li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+<a itemprop="item" href="<mt:Var name='_url'>"><span itemprop="name"><mt:Var name='__value__'></span></a>
+<meta itemprop="position" content="<mt:Var name='__counter__'>">
+</li>
+</mt:If>
+<mt:SetVar name="i" op="++">
+</mt:Loop>
+</ul>
+
+</div>
+</div>
+</mt:SetVarTemplate>
+
+<mt:Ignore>============================================================
+名称 : header
+解説 : header 要素
+============================================================</mt:Ignore>
+<mt:SetVarTemplate name="header"></mt:SetVarTemplate>
+
+<mt:Ignore>============================================================
+名称 : footer
+解説 : footer 要素
+============================================================</mt:Ignore>
+<mt:SetVarTemplate name="footer"></mt:SetVarTemplate>
+
+<mt:Ignore>============================================================
+名称 : dummy_text
+解説 : ダミーテキスト
+============================================================</mt:Ignore>
+<mt:SetVarTemplate name="dummy_text">
+<p>Proin eget tortor risus. Curabitur non nulla sit amet nisl tempus convallis quis ac lectus. Vivamus suscipit tortor eget felis porttitor volutpat. Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui. Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus.</p>
+<p>Vivamus suscipit tortor eget felis porttitor volutpat. Curabitur aliquet quam id dui posuere blandit. Curabitur aliquet quam id dui posuere blandit. Sed porttitor lectus nibh. Donec rutrum congue leo eget malesuada.</p>
+<p>Nulla porttitor accumsan tincidunt. Quisque velit nisi, pretium ut lacinia in, elementum id enim. Sed porttitor lectus nibh. Quisque velit nisi, pretium ut lacinia in, elementum id enim. Donec rutrum congue leo eget malesuada.</p>
+<p>Proin eget tortor risus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec velit neque, auctor sit amet aliquam vel, ullamcorper sit amet ligula. Donec rutrum congue leo eget malesuada. Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus. Sed porttitor lectus nibh.</p>
+<p>Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus. Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec velit neque, auctor sit amet aliquam vel, ullamcorper sit amet ligula. Curabitur arcu erat, accumsan id imperdiet et, porttitor at sem. Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus.</p>
+<p>Curabitur arcu erat, accumsan id imperdiet et, porttitor at sem. Nulla quis lorem ut libero malesuada feugiat. Nulla quis lorem ut libero malesuada feugiat. Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+<p>Nulla quis lorem ut libero malesuada feugiat. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur arcu erat, accumsan id imperdiet et, porttitor at sem. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla quis lorem ut libero malesuada feugiat.</p>
+<p>Quisque velit nisi, pretium ut lacinia in, elementum id enim. Nulla porttitor accumsan tincidunt. Sed porttitor lectus nibh. Donec rutrum congue leo eget malesuada. Nulla quis lorem ut libero malesuada feugiat.</p>
+<p>Nulla porttitor accumsan tincidunt. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec velit neque, auctor sit amet aliquam vel, ullamcorper sit amet ligula. Pellentesque in ipsum id orci porta dapibus. Donec sollicitudin molestie malesuada. Praesent sapien massa, convallis a pellentesque nec, egestas non nisi.</p>
+</mt:SetVarTemplate>
+
+<mt:Ignore>============================================================
+名称 : listing_monthly
+解説 : 月別アーカイブ
+============================================================</mt:Ignore>
+<mt:SetVarTemplate name="listing_monthly">
+<mt:IfArchiveTypeEnabled archive_type="Monthly">
+<mt:ArchiveList archive_type="Monthly">
+<mt:ArchiveListHeader>
+<section class="archive-monthly">
+<h2 class="archive-header">月別アーカイブ</h2>
+<ul>
+</mt:ArchiveListHeader>
+<li><a href="<mt:ArchiveLink>"><mt:ArchiveTitle escape="html"></a></li>
+<mt:ArchiveListFooter>
+</ul>
+</section>
+</mt:ArchiveListFooter>
+</mt:ArchiveList>
+</mt:IfArchiveTypeEnabled>
+</mt:SetVarTemplate>
+
+<mt:Ignore>============================================================
+名称 : listing_category
+解説 : カテゴリアーカイブ
+============================================================</mt:Ignore>
+<mt:SetVarTemplate name="listing_category">
+<mt:IfArchiveTypeEnabled archive_type="Category">
+<section class="archive-category">
+<h2 class="archive-header"カテゴリアーカイブ</h2>
+<mt:TopLevelCategories>
+<mt:SubCatIsFirst><ul></mt:SubCatIsFirst>
+
+<mt:If tag="CategoryCount"><li><a href="<mt:CategoryArchiveLink>" title="<mt:CategoryDescription>"><mt:CategoryLabel escape="html"></a><mt:SubCatsRecurse></li>
+<mt:Else><li><mt:CategoryLabel escape="html"></a><mt:SubCatsRecurse></li>
+</mt:If>
+
+<mt:SubCatIsLast></ul></mt:SubCatIsLast>
+</mt:TopLevelCategories>
+</section>
+</mt:IfArchiveTypeEnabled>
+</mt:SetVarTemplate>
+
+<mt:Ignore>============================================================
+名称 : listing_entry
+解説 : 記事アーカイブ
+============================================================</mt:Ignore>
+<mt:SetVarTemplate name="listing_entry">
+<mt:IfArchiveTypeEnabled archive_type="Individual">
+<mt:ArchiveList archive_type="Individual">
+<mt:ArchiveListHeader>
+<section class="archive-entry">
+<h2 class="archive-header">記事アーカイブ</h2>
+<ul>
+</mt:ArchiveListHeader>
+<li><a href="<mt:ArchiveLink>"><mt:ArchiveTitle escape="html"></a></li>
+<mt:ArchiveListFooter>
+</ul>
+</section>
+</mt:ArchiveListFooter>
+</mt:ArchiveList>
+</mt:IfArchiveTypeEnabled>
+</mt:SetVarTemplate>
+
+<mt:Ignore>============================================================
+名称 : listing_page
+解説 : ページアーカイブ
+============================================================</mt:Ignore>
+<mt:SetVarTemplate name="listing_page">
+<mt:IfArchiveTypeEnabled archive_type="Page">
+<mt:ArchiveList archive_type="Page">
+<mt:ArchiveListHeader>
+<section class="archive-page">
+<h2 class="archive-header">ページアーカイブ</h2>
+<ul>
+</mt:ArchiveListHeader>
+<li><a href="<mt:ArchiveLink>"><mt:ArchiveTitle escape="html"></a></li>
+<mt:ArchiveListFooter>
+</ul>
+</section>
+</mt:ArchiveListFooter>
+</mt:ArchiveList>
+</mt:IfArchiveTypeEnabled>
+</mt:SetVarTemplate>
